@@ -1,11 +1,368 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Portal</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <!-- Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .search-bar {
+      background: linear-gradient(90deg, #6f42c1, #8a5ed6);
+      padding: 25px 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .search-bar .input-group {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .search-bar input {
+      border-radius: 30px 0 0 30px;
+      padding: 15px 25px;
+      font-size: 18px;
+      border: none;
+      box-shadow: none;
+      background: rgba(255, 255, 255, 0.95);
+    }
+    .search-bar .btn {
+      border-radius: 0 30px 30px 0;
+      background-color: #5632a0;
+      border: none;
+      padding: 15px 25px;
+    }
+    .filters {
+      background: #ffffff;
+      padding: 15px 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .filters .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .filters select {
+      border-radius: 20px;
+      padding: 8px 15px;
+      border: 1px solid #6f42c1;
+      color: #6f42c1;
+      background: #f8f0ff;
+      transition: all 0.3s ease;
+    }
+    .filters select:hover {
+      background: #e8d9ff;
+    }
+    .filters .btn-clear {
+      background: #6f42c1;
+      color: white;
+      border-radius: 20px;
+      padding: 8px 20px;
+      border: none;
+      transition: all 0.3s ease;
+    }
+    .filters .btn-clear:hover {
+      background: #5632a0;
+    }
+    .content {
+      display: flex;
+      height: calc(100vh - 140px);
+    }
+    .job-cards {
+      width: 40%;
+      overflow-y: auto;
+      padding: 20px;
+      background: #ffffff;
+      border-right: 1px solid #e0e7ff;
+    }
+    .job-card {
+      background: #ffffff;
+      border: none;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 15px rgba(111, 66, 193, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .job-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(111, 66, 193, 0.2);
+    }
+    .job-card.active {
+      border: 2px solid #6f42c1;
+      background: #f8f0ff;
+    }
+    .job-card h3 {
+      color: #6f42c1;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .job-card p {
+      color: #666;
+      font-size: 14px;
+      margin: 4px 0;
+    }
+    .job-details {
+      width: 60%;
+      padding: 30px;
+      background: #ffffff;
+      position: fixed;
+      right: 0;
+      top: 140px;
+      height: calc(100vh - 140px);
+      overflow-y: auto;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+    }
+    .job-details h2 {
+      color: #6f42c1;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+    .job-details p {
+      color: #555;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    .job-details .label {
+      color: #6f42c1;
+      font-weight: 600;
+      margin-right: 5px;
+    }
+    .btn-apply {
+      background: #6f42c1;
+      color: white;
+      border-radius: 25px;
+      padding: 12px 30px;
+      border: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .btn-apply:hover {
+      background: #5632a0;
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
-    <p>Safthar</p>
+  <div class="search-bar">
+    <div class="container">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search jobs by title, company, or keyword" id="searchInput">
+        <button class="btn"><i class="fas fa-search"></i></button>
+      </div>
+    </div>
+  </div>
+  <div class="filters">
+    <div class="container">
+      <select id="location">
+        <option value="">All Locations</option>
+        <option value="1">New York</option>
+        <option value="2">Remote</option>
+      </select>
+      <select id="salary">
+        <option value="">All Salaries</option>
+        <option value="1">$30k–$50k</option>
+        <option value="2">$80k–$100k</option>
+      </select>
+      <select id="industry">
+        <option value="">All Industries</option>
+        <option value="tech">Tech</option>
+        <option value="finance">Finance</option>
+      </select>
+      <select id="experience">
+        <option value="">All Experience Levels</option>
+        <option value="entry">Entry-Level</option>
+        <option value="mid">Mid-Level</option>
+      </select>
+      <select id="jobCategory">
+        <option value="">All Types</option>
+        <option value="internship">Internship</option>
+        <option value="fulltime">Full-time</option>
+        <option value="parttime">Part-time</option>
+      </select>
+      <select id="freshness">
+        <option value="">Any Time</option>
+        <option value="1day">Last 1 Day</option>
+        <option value="3days">Last 3 Days</option>
+      </select>
+      <select id="duration" style="display: none;">
+        <option value="">Any Duration</option>
+        <option value="3">3 Months</option>
+        <option value="6">6 Months</option>
+      </select>
+      <select id="stipend" style="display: none;">
+        <option value="">Any Stipend</option>
+        <option value="1000">$1000</option>
+        <option value="2000">$2000</option>
+      </select>
+      <button class="btn-clear" id="clearFilters">Clear Filters</button>
+    </div>
+  </div>
+  <div class="content">
+     <div class="job-cards" id="jobCards">
+      <div class="job-card" data-id="1">
+        <h3>Software Engineer</h3>
+        <p><span class="label">Company:</span> xAI</p>
+        <p><span class="label">Location:</span> Remote</p>
+        <p><span class="label">Type:</span> Full-time</p>
+        <p><span class="label">Category:</span> Tech</p>
+        <p><span class="label">Salary:</span> $80k–$100k</p>
+        <p><span class="label">Posted:</span> 2025-03-26</p>
+      </div>
+      <div class="job-card" data-id="2">
+        <h3>Marketing Intern</h3>
+        <p><span class="label">Company:</span> Startup</p>
+        <p><span class="label">Location:</span> New York</p>
+        <p><span class="label">Type:</span> Internship</p>
+        <p><span class="label">Category:</span> Marketing</p>
+        <p><span class="label">Stipend:</span> $1000/month</p>
+        <p><span class="label">Duration:</span> 3 months</p>
+        <p><span class="label">Posted:</span> 2025-03-27</p>
+      </div>
+      <div class="job-card" data-id="3">
+        <h3>Data Analyst</h3>
+        <p><span class="label">Company:</span> TechCorp</p>
+        <p><span class="label">Location:</span> San Francisco</p>
+        <p><span class="label">Type:</span> Part-time</p>
+        <p><span class="label">Category:</span> Analytics</p>
+        <p><span class="label">Salary:</span> $50k–$70k</p>
+        <p><span class="label">Posted:</span> 2025-03-25</p>
+      </div>
+    </div>
+    <div class="job-details" id="jobDetails">
+      <div class="container">
+        <h2>Select a job to view details</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <script>
+    const jobDetails = document.getElementById('jobDetails');
+    const jobCards = document.querySelectorAll('.job-card');
+    const jobCategory = document.getElementById('jobCategory');
+    const salary = document.getElementById('salary');
+    const duration = document.getElementById('duration');
+    const stipend = document.getElementById('stipend');
+    const clearFilters = document.getElementById('clearFilters');
+
+    // Sample job data based on schema
+    const jobs = {
+      1: {
+        job_role: 'Software Engineer',
+        company: 'xAI',
+        job_type: 'fulltime',
+        job_category: 'Tech',
+        description: 'Build AI systems to accelerate human scientific discovery.',
+        location: 'Remote',
+        duration: null,
+        stipend: null,
+        salary_range: '$80k–$100k',
+        years_of_experience: '3-5 years',
+        openings: 2,
+        posted_date: '2025-03-26',
+        deadline: '2025-04-10'
+      },
+      2: {
+        job_role: 'Marketing Intern',
+        company: 'Startup',
+        job_type: 'internship',
+        job_category: 'Marketing',
+        description: 'Assist in creating marketing campaigns.',
+        location: 'New York',
+        duration: 3,
+        stipend: 1000,
+        salary_range: null,
+        years_of_experience: '0-1 year',
+        openings: 1,
+        posted_date: '2025-03-27',
+        deadline: '2025-04-05'
+      },
+      3: {
+        job_role: 'Data Analyst',
+        company: 'TechCorp',
+        job_type: 'parttime',
+        job_category: 'Analytics',
+        description: 'Analyze data to drive business decisions.',
+        location: 'San Francisco',
+        duration: null,
+        stipend: null,
+        salary_range: '$50k–$70k',
+        years_of_experience: '2-4 years',
+        openings: 3,
+        posted_date: '2025-03-25',
+        deadline: '2025-04-15'
+      }
+    };
+
+    // Card click handler
+    jobCards.forEach(card => {
+      card.addEventListener('click', () => {
+        jobCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        const jobId = card.dataset.id;
+        const job = jobs[jobId];
+        jobDetails.innerHTML = `
+          <div class="container">
+            <h2>${job.job_role}</h2>
+            <p><span class="label">Company:</span> ${job.company}</p>
+            <p><span class="label">Location:</span> ${job.location}</p>
+            <p><span class="label">Type:</span> ${job.job_type.charAt(0).toUpperCase() + job.job_type.slice(1)}</p>
+            <p><span class="label">Category:</span> ${job.job_category}</p>
+            ${job.salary_range ? `<p><span class="label">Salary:</span> ${job.salary_range}</p>` : ''}
+            ${job.stipend ? `<p><span class="label">Stipend:</span> $${job.stipend}/month</p>` : ''}
+            ${job.duration ? `<p><span class="label">Duration:</span> ${job.duration} months</p>` : ''}
+            <p><span class="label">Experience:</span> ${job.years_of_experience}</p>
+            <p><span class="label">Openings:</span> ${job.openings}</p>
+            <p><span class="label">Posted:</span> ${job.posted_date}</p>
+            <p><span class="label">Deadline:</span> ${job.deadline}</p>
+            <p><span class="label">Description:</span> ${job.description}</p>
+            <button class="btn btn-apply">Apply Now</button>
+          </div>
+        `;
+      });
+    });
+
+    // Job category filter logic
+    jobCategory.addEventListener('change', () => {
+      const value = jobCategory.value;
+      if (value === 'internship') {
+        salary.style.display = 'none';
+        duration.style.display = 'inline-block';
+        stipend.style.display = 'inline-block';
+      } else {
+        salary.style.display = 'inline-block';
+        duration.style.display = 'none';
+        stipend.style.display = 'none';
+      }
+    });
+
+    // Clear filters
+    clearFilters.addEventListener('click', () => {
+      document.querySelectorAll('.filters select').forEach(select => select.value = '');
+      salary.style.display = 'inline-block';
+      duration.style.display = 'none';
+      stipend.style.display = 'none';
+      jobDetails.innerHTML = '<div class="container"><h2>Select a job to view details</h2></div>';
+      jobCards.forEach(card => card.classList.remove('active'));
+    });
+  </script>
 </body>
 </html>
